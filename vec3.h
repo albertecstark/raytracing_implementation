@@ -50,6 +50,13 @@ public:
         return sqrt(length_squared());
     }
 
+    inline static vec3 random(){
+        return vec3(random_double(), random_double(), random_double());
+    }
+
+    inline static vec3 random(double min, double max){
+        return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+    }
 public:
     double e[3];
 };
@@ -58,7 +65,9 @@ public:
 // type aliases
 using point3 = vec3;
 using color = vec3;
-#pragma region utility
+
+
+#pragma region utility functions
 inline std::ostream& operator << (std::ostream &out, const vec3 &v){
     return out << v.e[0]<<' '<<v.e[1]<<' '<<v.e[2]<<"\n";
 }
@@ -98,10 +107,24 @@ inline vec3 cross(const vec3 &v, const vec3 &u){
                 u.e[2] * v.e[0] - u.e[0] * v.e[2],
                 u.e[0] * v.e[1] - u.e[1] * v.e[0]);
 }
-#pragma endregion
 
 inline vec3 unit_vector(vec3 v) {
     return v / v.length();
 }
+
+inline vec3 random_in_unit_sphere() {
+    while(true){
+        auto p = vec3::random(-1, 1);
+        if (p.length_squared() >= 1) continue;
+        return p;
+    }
+}
+
+
+
+#pragma endregion
+
+
+
 
 #endif //VEC3_H
