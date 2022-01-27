@@ -1,8 +1,3 @@
-#include <iostream>// writing to file
-#include <ctime>// file handling + performance monitoring
-#include <fstream>// file handling
-#include <tuple>
-
 #include "rt_implement.h"
 
 #include "color.h"
@@ -17,8 +12,8 @@ color ray_color(const ray& r, const hittable& world, int depth) {
     if (depth <= 0)
         return color(0,0,0);
 
-    if (world.hit(r, 0, infinity, rec)){
-        point3 target = rec.p + rec.normal + random_in_unit_sphere();
+    if (world.hit(r, 0.00001, infinity, rec)){
+        point3 target = rec.p + rec.normal + random_in_hemisphere(rec.normal);
         return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth -1);
     }
     vec3 unit_direction = unit_vector(r.direction());
@@ -27,52 +22,27 @@ color ray_color(const ray& r, const hittable& world, int depth) {
 }
 
 int main() {
-    // ignore this, will get this running eventually
-/*
-#pragma region render_mode
-    std::pair<int, int> mode ;
-    int samples = 0;
-    int depth = 0;
-    std::string response;
-    std::cin >> response;
-    std::cout<<"what mode do you want the program to run in?\n" <<"enter\n"<<" 'quickie' - 20 samples\n"
-             <<" 'test - 40 samples\n"
-             <<" 'release' - 200 samples, max_depth of 50";
-    if (response == "quickie"){
-        samples = 20;
-        depth = 5;
-    } else if (response == "test") {
-        samples = 40;
-        depth = 10;
-    } else if (response == "release"){
-        samples = 200;
-        depth = 50;
-    } else {
-        std::cout << "please input a valid confguration";
-        main();
-    }
-    mode = std::make_pair(samples, depth);
-#pragma endregion
-*/
+// std::pair mode = get_mode();
 
 #pragma region file_handling
     std::time_t image_gen_time_start = std::time(0);
-    std::string file_name = std::to_string(image_gen_time_start);
-    file_name = "test_at_" + file_name + ".ppm";
+    std::string start_time = std::to_string(image_gen_time_start);
+    std::string main_file_name = "test_at_" + start_time + ".ppm";
+    //std::string normals_file_name = "normals_of_test_at_" + start_time + ".ppm";
 #pragma endregion
 
 #pragma region image_parameters
     const auto aspect_ratio = 16.0 / 9.0;
     const int width = 1600;
     const int height = width / aspect_ratio;
-    const int samples_per_pixel = 20; //std::get<0>(mode);
-    const int max_depth = 5; //std::get<1>(mode);
+    const int samples_per_pixel = 100; //std::get<0>(mode);
+    const int max_depth = 50; //std::get<1>(mode);
 #pragma endregion
 
 #pragma region world
 hittable_list world;
-world.add(make_shared<sphere>(point3(0,0,-1), 0.5));
-world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
+// world.add(make_shared<sphere>(point3(0,0,-1), 0.5));
+// world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
 #pragma endregion
 
 #pragma region camera
@@ -80,7 +50,7 @@ world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
 #pragma endregion
 
 #pragma region render
-    std::ofstream image_file(file_name);
+    std::ofstream image_file(main_file_name);
     image_file<<"P3\n"<<width<<' '<<height<<"\n255\n";
     for(int j = height - 1; j >= 0; --j){
         std::cerr<<j<<" lines left\n"<< std::flush;
