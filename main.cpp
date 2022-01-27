@@ -1,6 +1,7 @@
 #include <iostream>// writing to file
 #include <ctime>// file handling + performance monitoring
 #include <fstream>// file handling
+#include <tuple>
 
 #include "rt_implement.h"
 
@@ -8,7 +9,6 @@
 #include "hittable_list.h"
 #include "sphere.h"
 #include "camera.h"
-
 
 color ray_color(const ray& r, const hittable& world, int depth) {
     hit_record rec;
@@ -27,6 +27,34 @@ color ray_color(const ray& r, const hittable& world, int depth) {
 }
 
 int main() {
+    // ignore this, will get this running eventually
+/*
+#pragma region render_mode
+    std::pair<int, int> mode ;
+    int samples = 0;
+    int depth = 0;
+    std::string response;
+    std::cin >> response;
+    std::cout<<"what mode do you want the program to run in?\n" <<"enter\n"<<" 'quickie' - 20 samples\n"
+             <<" 'test - 40 samples\n"
+             <<" 'release' - 200 samples, max_depth of 50";
+    if (response == "quickie"){
+        samples = 20;
+        depth = 5;
+    } else if (response == "test") {
+        samples = 40;
+        depth = 10;
+    } else if (response == "release"){
+        samples = 200;
+        depth = 50;
+    } else {
+        std::cout << "please input a valid confguration";
+        main();
+    }
+    mode = std::make_pair(samples, depth);
+#pragma endregion
+*/
+
 #pragma region file_handling
     std::time_t image_gen_time_start = std::time(0);
     std::string file_name = std::to_string(image_gen_time_start);
@@ -37,8 +65,8 @@ int main() {
     const auto aspect_ratio = 16.0 / 9.0;
     const int width = 1600;
     const int height = width / aspect_ratio;
-    const int samples_per_pixel = 100;
-    const int max_depth = 50;
+    const int samples_per_pixel = 20; //std::get<0>(mode);
+    const int max_depth = 5; //std::get<1>(mode);
 #pragma endregion
 
 #pragma region world
