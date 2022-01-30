@@ -1,10 +1,5 @@
 #include "rt_implement.h"
 
-#include "color.h"
-#include "hittable_list.h"
-#include "sphere.h"
-#include "camera.h"
-
 color ray_color(const ray& r, const hittable& world, int depth) {
     hit_record rec;
 
@@ -41,8 +36,8 @@ int main() {
 
 #pragma region world
 hittable_list world;
-// world.add(make_shared<sphere>(point3(0,0,-1), 0.5));
-// world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
+world.add(make_shared<sphere>(point3(0,0,-1), 0.5));
+world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
 #pragma endregion
 
 #pragma region camera

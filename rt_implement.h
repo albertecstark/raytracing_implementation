@@ -12,6 +12,10 @@
 #include <limits>
 #include <memory>
 #include <cstdlib>
+#include "color.h"
+#include "hittable_list.h"
+#include "sphere.h"
+#include "camera.h"
 
 // ignore this, will get this running eventually
 #pragma region render_mode
